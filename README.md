@@ -14,11 +14,21 @@ $ cbhs -w 3 -m 2 -M 4
 rebs mori femf
 $ cbhs -C -w 6
 Funest Larunda Exudate Apachism Myopies Overyear
+$ ./chbs -w 3 -c -1 -m7 -M9
+synopsize trisected mikados
+daishiki aceldamas nonfutile
+drownding placets altumal
+crellen garfield routinist
+namaqua pioneer hypnoetic
+outlies bedribble barcelona
+betatter antagony hypoxis
+deutsche laniidae winesops
+^C
 $ chbs --help
 ...
 ```
 
 #### Warning :warning:
- * May end up in in infinite loop, if conditions could not be met with provided word list
+ * May end up in in infinite loop, if conditions could not be met with provided word list.
  * May run random amount of time.
- * May kill your kitten and/or burn your kitchen
+ * May kill your kitten and/or burn your kitchen.
