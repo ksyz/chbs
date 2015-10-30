@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib '.';
+use Acme::CHBS;
+
+my $pwgen = Acme::CHBS->new(min_length => 3, max_length => 7, words => 4);
+printf("%s\n", $pwgen->throw($pwgen->jar));

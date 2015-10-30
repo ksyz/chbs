@@ -1,13 +1,13 @@
 #!/usr/bin/perl
 # 2015, Michal Ingeli <mi@v3.sk>, WTF-PL
-package Acme::CBHS;
+package Acme::CHBS;
 
 use strict;
 use warnings;
 use Data::Dumper;
 
 use Math::Random::Secure qw(irand);
-use Getopt::Long  qw(:config no_ignore_case bundling);
+use Getopt::Long  qw(GetOptionsFromArray :config no_ignore_case bundling);
 use File::Slurp;
 
 sub check;
@@ -17,104 +17,121 @@ sub jar;
 sub throw;
 sub help;
 
-my %c = (
-	words => 6,
-	symbols => 0,
-	min_length => 4,
-	max_length => 8,
-	dict => '/usr/share/dict/words',
-	count => 1,
-	capitalize_first => 0,
-	overall_length => 32,
-);
+__PACKAGE__->main(@ARGV) unless caller;
 
-my $options = GetOptions(
-	'w|words=i' => \$c{words},
-	'S|symbols' => \$c{symbols},
-	'm|min=i' => \$c{min_length},
-	'M|max=i' => \$c{max_length},
-	'd|dictionary=s' => \$c{dict},
-	'c|count=i' => \$c{count},
-	'h|help' => \$c{help},
-	'C|capitalize-first' => \$c{capitalize_first},
-);
+sub main {
+	my @ARGV = @_;
+
+	my %c = ( count => 1, );
+	my $options = GetOptionsFromArray(\@ARGV,
+		'w|words=i' => \$c{words},
+		'S|symbols' => \$c{symbols},
+		'm|min=i' => \$c{min_length},
+		'M|max=i' => \$c{max_length},
+		'd|dictionary=s' => \$c{dict},
+		'c|count=i' => \$c{count},
+		'h|help' => \$c{help},
+		'C|capitalize-first' => \$c{capitalize_first},
+	);
+	exit 1
+		unless ($options);
+
+	if ($c{help}) {
+		print help;
+		exit 0;
+	}
+
+	local $\ = "\n";
+	my $chbs = __PACKAGE__->new(map { $_ => $c{$_} } grep { defined $c{$_} } keys %c);
+	for (;$c{count};$c{count}--) {
+		my @parts = $chbs->jar;
+		print $chbs->throw(@parts);
+	}
+}
+
+sub new {
+	my $class = shift;
+	my $self = {
+		words => 6,
+		symbols => 0,
+		min_length => 4,
+		max_length => 8,
+		dict => '/usr/share/dict/words',
+		capitalize_first => 0,
+		overall_length => 32, 
+		@_ 
+	};
+	my @lines = read_file($self->{dict});
+	$self->{_lines} = [@lines];
+	return bless $self, $class;
+};
 
 sub help {
 	return <<HELP;
 cbhs [ OPTIONS ]
 OPTIONS:
 -w,--words INT
-	Number of words (default $c{words}
+	Number of words (default 6)
 -S,--symbols
 	Don't skip dictionary words with symbols and numbers (default false)
 -m,--minimum INT
-	Minimum word length (default $c{min_length}
+	Minimum word length (default 4)
 -M,--maximum INT
-	Maximum word length (default $c{max_length}
+	Maximum word length (default 8)
 -d,--dictionary FILE
-	Dictionary file (default $c{dict})
+	Dictionary file (default /usr/share/dict/words)
 -c,--count INT
-	Number of generated sets, one per line (default $c{count})
+	Number of generated sets, one per line (default one), INT<0 for infinite.
 -C,capitalize-first
 	Capitalize first letter (default false)
 HELP
 };
 
-exit 1
-	unless ($options);
 
-if ($c{help}) {
-	print help;
-	exit 0;
-}
-
-my @lines = read_file($c{dict});
-
-for (;$c{count};$c{count}--) {
-	my @parts = jar;
-	throw @parts;
-}
 
 sub jar {
+	my $self = shift;
 	my @parts;
-	for (my $i = $c{words}; $i; $i--) {
-		push @parts, dice;
+	for (my $i = $self->{words}; $i; $i--) {
+		push @parts, $self->dice;
 	};
 	return @parts;
 };
 
 sub dice {
+	my $self = shift;
 	my $word;
 	while (1) {
-		$word = mangle $lines[irand($#lines)];
+		$word = $self->mangle($self->{_lines}[irand($#{$self->{_lines}})]);
 		next 
-			unless check $word;
+			unless $self->check($word);
 		return $word;
 	}
 };
 
 sub mangle {
-	my $word = lc shift;
+	my ($self, $word) = @_;
+	$word = lc $word;
 	chomp $word;
 	$word = ucfirst $word
-		if ($c{capitalize_first});
+		if ($self->{capitalize_first});
 	return $word;
 };
 	
 sub check {
-	my $word = shift;
+	my ($self, $word) = @_;
 	return undef
-		if (length $word < $c{min_length});
+		if (length $word < $self->{min_length});
 	return undef
-		if (length $word > $c{max_length});
+		if (length $word > $self->{max_length});
 	return undef
-		if (!$c{symbols} && $word !~ /^[a-z]+$/i);
+		if (!$self->{symbols} && $word !~ /^[a-z]+$/i);
 	return 1;
 };
 
 sub throw {
-	my @parts = @_;
-	printf("%s\n", join(' ', @parts));
+	my ($self, @parts) = @_;
+	return join(' ', @parts);
 }
 
 1;
