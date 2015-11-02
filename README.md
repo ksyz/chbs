@@ -4,7 +4,7 @@ Another [xkcd-936](https://xkcd.com/936/) inspired, correct horse battery staple
 
 Required perl modules:
 
- * Math::Random::Secure
+ * Crypt::Random::TESHA2 (change for Math::Random::Secure, which is not available in Enterprise Linux 7, with some backported irand() functionality)
  * File::Slurp
 
 Examples:

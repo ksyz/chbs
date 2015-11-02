@@ -1,13 +1,20 @@
 #!/usr/bin/perl
 # 2015, Michal Ingeli <mi@v3.sk>, WTF-PL
+#
+# main part of _rand() and _to_float taken from Math::Random::Secure 
+# (which is unavalable in enterprise linux 7), copying under terms 
+# of Artistic license 2.0
+
 package Acme::CHBS;
 
 use strict;
 use warnings;
 use Data::Dumper;
 
-use Math::Random::Secure qw(irand);
+use Crypt::Random::TESHA2 qw(irand);
 use File::Slurp;
+
+use constant DIVIDE_BY => 2**32;
 
 sub check_word;
 sub check_passphrase;
@@ -18,6 +25,8 @@ sub jar;
 sub throw;
 sub shuffle;
 sub help;
+sub _rand;
+sub _to_float;
 
 sub new {
 	my $class = shift;
@@ -40,7 +49,25 @@ sub new {
 
 	my @lines = read_file($self->{dict});
 	$self->{_lines} = [@lines];
+	$self->{_n_lines} = $#lines;
 	return $self;
+};
+
+sub _to_float {
+	my ($integer, $limit) = @_;
+	$limit = 1 if !$limit;
+	return ($integer / DIVIDE_BY) * $limit;
+}
+
+sub _rand {
+	my ($self) = @_;
+	my $rand = irand();
+	# as noted in Math::Random::Secure
+	# We can't just use the mod operator because it will bias
+	# our output. Search for "modulo bias" on the Internet for
+	# details. This is slower than mod(), but does not have a bias,
+	# as demonstrated by our uniform.t test.
+	return int(_to_float($rand, $self->{_n_lines}));
 };
 
 sub jar {
@@ -56,7 +83,7 @@ sub dice {
 	my $self = shift;
 	my $word;
 	while (1) {
-		$word = $self->mangle($self->{_lines}[irand($#{$self->{_lines}})]);
+		$word = $self->mangle($self->{_lines}[$self->_rand]);
 		next 
 			unless $self->check_word($word);
 		return $word;
