@@ -12,6 +12,7 @@ use File::Slurp;
 
 sub check_word;
 sub check_passphrase;
+sub check_if_we_can;
 sub mangle;
 sub dice;
 sub jar;
@@ -67,6 +68,9 @@ sub new {
 	};
 
 	$self = bless $self, $class;
+
+	die("Impossible min/max barrier combination")
+		unless ($self->check_if_we_can);
 
 	my @lines = read_file($self->{dict});
 	$self->{_lines} = [@lines];
@@ -147,6 +151,21 @@ sub check_passphrase {
 	return 1;
 };
 
+sub check_if_we_can {
+	my ($self) = @_;
+	# separators
+	my $sep_chars = $self->{words} - 1;
+	# min length
+	my $min_chars = $sep_chars + (defined $self->{min_length} ? $self->{words} * $self->{min_length} : 0);
+	my $max_chars = $sep_chars + (defined $self->{max_length} ? $self->{words} * $self->{max_length} : 0);
+
+	return undef
+		if (defined $self->{passphrase_min_length} && $max_chars < $self->{passphrase_min_length});
+	return undef
+		if (defined $self->{passphrase_max_length} && $min_chars > $self->{passphrase_max_length});
+	return 1;
+
+};
 sub shuffle {
 	my ($self) = @_;
 	while (1) {
