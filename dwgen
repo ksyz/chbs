@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib '.';
+use lib 'lib';
 use Acme::CHBS;
 
 my $dw_dict;
