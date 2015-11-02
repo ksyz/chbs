@@ -24,11 +24,21 @@ outlies bedribble barcelona
 betatter antagony hypoxis
 deutsche laniidae winesops
 ^C
+$ ./chbs -w 5 -m2 -d diceware8k.txt
+elude gg dahl di cauchy
 $ chbs --help
 ...
 ```
 
+#### Lists
+ * http://world.std.com/~reinhold/diceware8k.txt
+ * /usr/share/dict/words
+
+If in doubt, whether you will end in endless loop, check the word list capabilities with `wc -L $WORDLIST`, to determine exact limits for that word list. 
+
 #### Warning :warning:
+ * It's not a [diceware](http://world.std.com/~reinhold/diceware.html) implementation.
  * May end up in in infinite loop, if conditions could not be met with provided word list.
  * May run random amount of time.
  * May kill your kitten and/or burn your kitchen.
+ * Module interface is subject to random changes

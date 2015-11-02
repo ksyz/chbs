@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use lib '.';
+use Acme::CHBS;
+
+my $dw_dict;
+for (qw(. /usr/share/dict /usr/local/share/dict)) {
+	$dw_dict = "$_/diceware8k.txt" if -f "$_/diceware8k.txt";
+	last if $dw_dict;
+}
+
+die "Missing diceware wordlist"
+	unless $dw_dict;
+
+my $pwgen = Acme::CHBS->new(min_length => 2, words => 5, dictionary => 'diceware8k.txt');
+printf("%s\n", $pwgen->shuffle);
