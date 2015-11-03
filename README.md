@@ -7,7 +7,7 @@ Required perl modules:
  * Crypt::Random::TESHA2 (replacement for Math::Random::Secure, which is not available in Enterprise Linux 7, with some backported irand() functionality)
  * File::Slurp
 
-Compatible with at least Fedora 21 or Enterprise Linux 6. There is rpm copr [https://copr.fedoraproject.org/coprs/ksyz/Acme-CHBS/](repo) available.
+Compatible with at least Fedora 21 or Enterprise Linux 6. There is rpm copr [repo](https://copr.fedoraproject.org/coprs/ksyz/Acme-CHBS/) available.
 
 #### Examples:
 
