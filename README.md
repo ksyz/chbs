@@ -1,13 +1,13 @@
 # :ok_hand: :horse: :battery: :paperclip:
 
-Another [xkcd-936](https://xkcd.com/936/) inspired, correct horse battery staple (didn't found right emoji for staple) password generator. Copying under WTF-PL.
+Another [xkcd-936](https://xkcd.com/936/) inspired, correct horse battery staple (didn't found right emoji for staple) password generator. Some [holy war](http://security.stackexchange.com/a/62842) reading. Copying under WTF-PL.
 
 Required perl modules:
 
  * Crypt::Random::TESHA2 (replacement for Math::Random::Secure, which is not available in Enterprise Linux 7, with some backported irand() functionality)
  * File::Slurp
 
-Compatible with at least Fedora 21 or Enterprise Linux 6. There is rpm copr [repo](https://copr.fedoraproject.org/coprs/ksyz/Acme-CHBS/) available.
+Compatible with at least Fedora 21 or Enterprise Linux 6. There is rpm copr [repo](https://copr.fedoraproject.org/coprs/ksyz/Acme-CHBS/) available. 
 
 #### Examples:
 
