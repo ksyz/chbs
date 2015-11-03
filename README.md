@@ -4,10 +4,12 @@ Another [xkcd-936](https://xkcd.com/936/) inspired, correct horse battery staple
 
 Required perl modules:
 
- * Crypt::Random::TESHA2 (change for Math::Random::Secure, which is not available in Enterprise Linux 7, with some backported irand() functionality)
+ * Crypt::Random::TESHA2 (replacement for Math::Random::Secure, which is not available in Enterprise Linux 7, with some backported irand() functionality)
  * File::Slurp
 
-Examples:
+Compatible with at least Fedora 21 or Enterprise Linux 6. There is rpm copr [https://copr.fedoraproject.org/coprs/ksyz/Acme-CHBS/](repo) available.
+
+#### Examples:
 
 ```sh
 $ cbhs -w 3 -m 2 -M 4
@@ -37,8 +39,8 @@ $ chbs --help
 If in doubt, whether you will end in endless loop, check the word list capabilities with `wc -L $WORDLIST`, to determine exact limits for that word list. 
 
 #### Warning :warning:
- * It's not a [diceware](http://world.std.com/~reinhold/diceware.html) implementation.
+ * It's not a [diceware](http://world.std.com/~reinhold/diceware.html), or at least, I didn't care, to make one.
  * May end up in in infinite loop, if conditions could not be met with provided word list.
- * May run random amount of time.
+ * May run for random amount of time.
  * May kill your kitten and/or burn your kitchen.
- * Module interface is subject to random changes
+ * Module interface is subject to random changes.
