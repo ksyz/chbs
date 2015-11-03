@@ -1,9 +1,9 @@
-%global commit0 771e5d2e843dbcb525d3c214e18755f32e72604e
+%global commit0 4bdee9019a942afbbb9c176cd05bd72ba6398ab3
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global package_name chbs
 
 Name:           perl-Acme-CHBS
-Version:        1.0
+Version:        2
 Release:        1%{?dist}
 Summary:        Correct horse battery staple
 License:        WTFPL
@@ -12,7 +12,7 @@ URL:            https://github.com/ksyz/chbs
 Source0:        https://github.com/ksyz/%{package_name}/archive/%{commit0}.tar.gz#/%{package_name}-%{shortcommit0}.tar.gz
 Source1:        https://world.std.com/~reinhold/diceware8k.txt
 BuildArch:      noarch
-Requires:       perl(Math::Random::Secure)
+Requires:       perl(Crypt::Random::TESHA2)
 Requires:       perl(File::Slurp)
 Requires:       words
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -47,5 +47,12 @@ install -m644 %{SOURCE1} %{buildroot}%{_datadir}/dict/
 %doc README.md
 
 %changelog
+* Mon Nov  3 2015 Michal Ingeli <mi@v3.sk> 2-1
+- New release
+- Release numbering with one integer increments, from now on.
+
+* Mon Nov  2 2015 Michal Ingeli <mi@v3.sk> 1.1-1
+- New release
+
 * Mon Nov  2 2015 Michal Ingeli <mi@v3.sk> 1.0-1
 - Initial package.
