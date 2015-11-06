@@ -6,13 +6,18 @@ use lib 'lib';
 use Acme::CHBS;
 
 my $dw_dict;
-for (qw(. /usr/share/dict /usr/local/share/dict ), "$ENV{HOME}/.dict") {
-	$dw_dict = "$_/diceware8k.txt" if -f "$_/diceware8k.txt";
-	last if $dw_dict;
+if ($ENV{CHBS_DICT} && -f $ENV{CHBS_DICT}) {
+	$dw_dict = $ENV{CHBS_DICT};
+}
+else {
+	for (qw(. /usr/share/dict /usr/local/share/dict ), "$ENV{HOME}/.dict") {
+		$dw_dict = "$_/diceware8k.txt" if -f "$_/diceware8k.txt";
+		last if $dw_dict;
+	}
 }
 
 die "Missing diceware wordlist.\n"
 	unless $dw_dict;
 
-my $pwgen = Acme::CHBS->new(min_length => 2, words => 5, dictionary => 'diceware8k.txt');
+my $pwgen = Acme::CHBS->new(min_length => 2, words => 5, dict => $dw_dict);
 printf("%s\n", $pwgen->shuffle);
