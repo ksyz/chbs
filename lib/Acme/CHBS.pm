@@ -31,10 +31,10 @@ sub _to_float;
 sub new {
 	my $class = shift;
 	my $self = {
-		words => 6,
+		words => 5,
 		symbols => 0,
-		min_length => 4,
-		max_length => 8,
+		min_length => 2,
+		max_length => 7,
 		dict => '/usr/share/dict/words',
 		capitalize_first => 0,
 		passphrase_min_length => 1,
@@ -128,7 +128,7 @@ sub check_if_we_can {
 	# min length
 	my $min_chars = $sep_chars + (defined $self->{min_length} ? $self->{words} * $self->{min_length} : 0);
 	my $max_chars = $sep_chars + (defined $self->{max_length} ? $self->{words} * $self->{max_length} : 0);
-
+	
 	return undef
 		if (defined $self->{passphrase_min_length} && $max_chars < $self->{passphrase_min_length});
 	return undef
@@ -136,6 +136,7 @@ sub check_if_we_can {
 	return 1;
 
 };
+
 sub shuffle {
 	my ($self) = @_;
 	while (1) {
