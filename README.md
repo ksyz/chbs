@@ -16,6 +16,10 @@ $ cbhs -w 3 -m 2 -M 4
 rebs mori femf
 $ cbhs -C -w 6
 Funest Larunda Exudate Apachism Myopies Overyear
+$ chbs -s-
+rory-bauge-ajaja-assise-hassled
+$ chbs -s-:_\$ -R
+bargeer_cora_acystia_lycee:mest
 $ ./chbs -w 3 -c -1 -m7 -M9
 synopsize trisected mikados
 daishiki aceldamas nonfutile
@@ -37,6 +41,16 @@ $ chbs --help
  * /usr/share/dict/words
 
 If in doubt, whether you will end in endless loop, check the word list capabilities with `wc -L $WORDLIST`, to determine exact limits for that word list. 
+
+##### Local language based dictionary
+It may be (is? insert potato here) much easier, to memoryse passphrases, not based on english ditionary for not native english speakers, meaning, in their mother language. In this case is used worlist, based on frequency of words from Slovak wikipedia dump. [id/psycho](http://p.brm.sk/sk_wordlist/) did the heavy lifting in this part, and prepared word packages. Wordlist `dict/dw-sk-8k.txt` contains 8192 most frequent words (3 to 6 character, inclusive), based on provided slovak wordlists.
+
+```sh
+$ CHBS_DICT=dict/dw-sk-8k.txt dwgen 
+granat obraz ziskom moct bombu
+$ chbs -s- -d dict/dw-sk-8k.txt 
+mpc-zuby-paci-tunely-marsu
+```
 
 #### Warning :warning:
  * It's not a [diceware](http://world.std.com/~reinhold/diceware.html), or at least, I didn't care, to make one.
