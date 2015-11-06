@@ -39,6 +39,8 @@ sub new {
 		capitalize_first => 0,
 		passphrase_min_length => 1,
 		passphrase_max_length => 32,
+		separator => ' ',
+		random_separator => 0,
 		@_ 
 	};
 
@@ -146,7 +148,23 @@ sub shuffle {
 
 sub throw {
 	my ($self, @parts) = @_;
-	return join(' ', @parts);
+	my $_sep;
+
+	if ($self->{random_separator} && length $self->{separator} > 1) {
+		my $retval = '';
+		my @sep = split('', $self->{separator});
+
+		for my $w (@parts) {
+			$retval .= $w.$sep[rand $#sep];
+		}
+		return substr($retval, 0, (length($retval) - 1));
+	}
+	else {
+		$_sep = substr($self->{separator}, 0, 1)
+			if length $self->{separator} >= 1;
+
+		return join($_sep, @parts);
+	}
 };
 
 1;

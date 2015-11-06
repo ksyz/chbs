@@ -3,8 +3,8 @@
 %global package_name chbs
 
 Name:           perl-Acme-CHBS
-Version:        2
-Release:        1%{?dist}
+Version:        3
+Release:        1.%{shortcommit0}%{?dist}
 Summary:        Correct horse battery staple
 License:        WTFPL
 Group:          Development/Libraries
@@ -47,7 +47,11 @@ install -m644 %{SOURCE1} %{buildroot}%{_datadir}/dict/
 %doc README.md
 
 %changelog
-* Mon Nov  3 2015 Michal Ingeli <mi@v3.sk> 2-1
+* Tue Nov  3 2015 Michal Ingeli <mi@v3.sk> 3-1
+- New release
+- provided/random word-glueing character (-s/-R)
+
+* Tue Nov  3 2015 Michal Ingeli <mi@v3.sk> 2-1
 - New release
 - Release numbering with one integer increments, from now on.
 

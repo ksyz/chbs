@@ -28,6 +28,12 @@ OPTIONS:
 	Minimum passphrase length (default 1)
 -L,--max-length INT
 	Maximum passphrase length (default 32)
+-s,--separator CHAR|STRING
+	Character, used as word separator (default: ' '). If several unique 
+	characters are provided, only first is used, unless random selection 
+	is requested for each word gap.
+-R,--random-separator
+	Select random character from separator list.
 HELP
 };
 
@@ -44,6 +50,8 @@ my $options = GetOptions(
 	'C|capitalize-first' => \$c{capitalize_first},
 	'l|min-length=i' => \$c{passphrase_min_length},
 	'L|max-length=i' => \$c{passphrase_max_length},
+	'R|random-separator!' => \$c{random_separator},
+	's|separator=s' => \$c{separator},
 );
 
 exit 1
