@@ -1,10 +1,10 @@
-%global commit0 4bdee9019a942afbbb9c176cd05bd72ba6398ab3
+%global commit0 0fd87e02fbabf24d5cb100ab9bceb4111efbefc6
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global package_name chbs
 
 Name:           perl-Acme-CHBS
 Version:        3
-Release:        1.%{shortcommit0}%{?dist}
+Release:        2.%{shortcommit0}%{?dist}
 Summary:        Correct horse battery staple
 License:        WTFPL
 Group:          Development/Libraries
@@ -37,6 +37,8 @@ install -m755 dwgen %{buildroot}%{_bindir}/dwgen
 
 install -d -m755 %{buildroot}%{_datadir}/dict/
 install -m644 %{SOURCE1} %{buildroot}%{_datadir}/dict/
+install -m644 dict/dw-sk-8k.txt %{buildroot}%{_datadir}/dict/
+install -m644 dict/dw-cs-8k.txt %{buildroot}%{_datadir}/dict/
 
 %{_fixperms} %{buildroot}
 
@@ -47,6 +49,9 @@ install -m644 %{SOURCE1} %{buildroot}%{_datadir}/dict/
 %doc README.md
 
 %changelog
+* Tue Jul 26 2016 Michal Ingeli <mi@v3.sk> 3-2
+- Added sk, cs wordlists
+
 * Tue Nov  3 2015 Michal Ingeli <mi@v3.sk> 3-1
 - New release
 - provided/random word-glueing character (-s/-R)
