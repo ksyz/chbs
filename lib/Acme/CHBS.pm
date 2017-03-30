@@ -149,7 +149,7 @@ sub shuffle {
 
 sub throw {
 	my ($self, @parts) = @_;
-	my $_sep;
+	my $_sep = '';
 
 	if ($self->{random_separator} && length $self->{separator} > 1) {
 		my $retval = '';
