@@ -6,6 +6,8 @@ use Getopt::Long  qw(:config no_ignore_case bundling);
 use lib 'lib';
 use Acme::CHBS;
 
+my $dict_path = $ENV{CHBS_DICT_PATH} || "/usr/share/dict/";
+
 sub help {
 	return <<HELP;
 cbhs [ OPTIONS ]
@@ -34,6 +36,7 @@ OPTIONS:
 	is requested for each word gap.
 -R,--random-separator
 	Select random character from separator list.
+-B,--bip0039 LANG
 HELP
 };
 
@@ -52,6 +55,7 @@ my $options = GetOptions(
 	'L|max-length=i' => \$c{passphrase_max_length},
 	'R|random-separator!' => \$c{random_separator},
 	's|separator=s' => \$c{separator},
+	'B|bip0039=s' => \$c{bip0039},
 );
 
 exit 1
@@ -63,6 +67,20 @@ if ($c{help}) {
 }
 
 local $\ = "\n";
+
+if (defined $c{bip0039}) {
+	$c{bip0039} = "english"
+		if ($c{bip0039} =~ /^\s*$/);
+	
+	my $path = sprintf("%s/bip0039/%s.txt", $dict_path, $c{bip0039});
+	$c{dict} = $path
+		if -f $path;
+
+	die sprintf("Bip0039 word list <%s> not found.", $path)
+	# die sprintf("Bip0039 word list <%s> not found.", $c{bip0039})
+		unless $c{dict};
+}
+
 my $chbs = Acme::CHBS->new(map { $_ => $c{$_} } grep { defined $c{$_} } keys %c);
 for (;$c{count};$c{count}--) {
 	print $chbs->shuffle;
