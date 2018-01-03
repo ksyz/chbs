@@ -4,7 +4,7 @@
 
 Name:           perl-Acme-CHBS
 Version:        5
-Release:        1.%{shortcommit0}%{?dist}
+Release:        2.%{shortcommit0}%{?dist}
 Summary:        Correct horse battery staple
 License:        WTFPL
 Group:          Development/Libraries
@@ -23,6 +23,7 @@ Source16:		https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/chines
 Source17:		https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/chinese_traditional.txt
 
 BuildArch:      noarch
+BuildRequires:  perl >= 0:5.010001
 Requires:       perl(Crypt::Random::TESHA2)
 Requires:       perl(File::Slurp)
 Requires:       words
@@ -66,6 +67,9 @@ done
 %doc README.md
 
 %changelog
+* Wed Jan  3 2018 Michal Ingeli <mi@v3.sk> 5-2
+- Added perl into BR, to expand perl(:MODULE_COMPAT_) macro.
+
 * Mon Sep 11 2017 Michal Ingeli <mi@v3.sk> 5-1
 - Version upgrade
 - Added BIP-0039 word lists
