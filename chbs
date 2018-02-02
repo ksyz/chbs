@@ -36,7 +36,12 @@ OPTIONS:
 	is requested for each word gap.
 -R,--random-separator
 	Select random character from separator list.
+-1	[ N ]
+	Add one number at random place, replacing character with matching leet
+	speek number. To keep some password checkers quiet. Without value, 
+	defaults to one/1.
 -B,--bip0039 LANG
+	Use BIP-0039 language specific word list.
 HELP
 };
 
@@ -56,6 +61,7 @@ my $options = GetOptions(
 	'R|random-separator!' => \$c{random_separator},
 	's|separator=s' => \$c{separator},
 	'B|bip0039=s' => \$c{bip0039},
+	'1:1' => \$c{leet_speak},
 );
 
 exit 1

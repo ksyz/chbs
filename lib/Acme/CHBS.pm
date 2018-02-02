@@ -27,6 +27,7 @@ sub shuffle;
 sub help;
 sub _rand;
 sub _to_float;
+sub char_to_leet;
 
 sub new {
 	my $class = shift;
@@ -41,6 +42,7 @@ sub new {
 		passphrase_max_length => 32,
 		separator => ' ',
 		random_separator => 0,
+		leet_speak => 0,
 		@_ 
 	};
 
@@ -151,21 +153,90 @@ sub throw {
 	my ($self, @parts) = @_;
 	my $_sep = '';
 
+	my $retval = '';
+
 	if ($self->{random_separator} && length $self->{separator} > 1) {
-		my $retval = '';
 		my @sep = split('', $self->{separator});
 
 		for my $w (@parts) {
-			$retval .= $w.$sep[rand $#sep];
+			$retval .= $w.$sep[int(rand($#sep + 1))];
 		}
-		return substr($retval, 0, (length($retval) - 1));
+		$retval = substr($retval, 0, (length($retval) - 1));
 	}
 	else {
 		$_sep = substr($self->{separator}, 0, 1)
 			if length $self->{separator} >= 1;
 
-		return join($_sep, @parts);
+		$retval = join($_sep, @parts);
 	}
+
+	if (defined $self->{leet_speak} && $self->{leet_speak} > 0 && $self->check_valit_for_leet($retval)) {
+		my @indexes = ();
+		my $i;
+		for (my $i = length $retval; $i > 0; $i--) {
+			my $char = substr($retval, $i, 1);
+			push @indexes, $i
+				if (index($self->{_leet_valid_r}, $char) != -1);
+		}
+		for (my $i = 0; $i < $self->{leet_speak} && 0 < scalar(@indexes); $i++) {
+			my $index = int(rand(scalar(@indexes)));
+			my $replace = $indexes[$index];
+			my $new_val = substr($retval, 0, $replace);
+
+			$new_val .= $self->char_to_leet(substr($retval, $replace, 1));
+			$new_val .= substr($retval, $replace+1, length($retval) - ( $replace + 1))
+				if ($replace + 1 < length($retval));
+			splice @indexes, $index, 1;
+			$retval = $new_val;
+		}
+	}
+
+	return $retval;
 };
+
+my $leet_table = {
+	0 => 'OQDo',
+	1 => 'ILil',
+	2 => 'Zz',
+	3 => 'Ee',
+	4 => 'HAa',
+	5 => 'Ss',
+	6 => 'Ggb',
+	7 => 'TtjJ',
+	8 => 'B',
+	9 => 'Pq',
+};
+
+sub check_valit_for_leet {
+	my ($self, $passphrase) = @_;
+	unless ($self->{_leet_valid_qr}) {
+		my $_leet_valid_r = join('', values %$leet_table);
+		$self->{_leet_valid_r} = $_leet_valid_r;
+		$self->{_leet_valid_qr} = qr/[$_leet_valid_r]/;
+	}
+
+	return 1
+		if $passphrase =~ $self->{_leet_valid_qr};
+
+	return undef;
+};
+
+sub char_to_leet {
+	my ($self, $char) = @_;
+
+	my $valid_chars = join('', values %$leet_table);
+
+	return undef
+		if (index($valid_chars, $char) == -1);
+
+	for (keys %$leet_table) {
+		next 
+			if (index($leet_table->{$_}, $char) == -1);
+
+		return $_;
+	}
+
+	return undef;
+}
 
 1;
