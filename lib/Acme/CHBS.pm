@@ -60,6 +60,7 @@ sub new {
 		passphrase_min_length => 1,
 		passphrase_max_length => 32,
 		separator => ' ',
+		no_separator => 0,
 		random_separator => 0,
 		leet_speak => 0,
 		insert_random_number => 0,
@@ -182,19 +183,24 @@ sub throw {
 
 	my $retval = '';
 
-	if ($self->{random_separator} && length $self->{separator} > 1) {
-		my @sep = split('', $self->{separator});
-
-		for my $w (@parts) {
-			$retval .= $w.$sep[int(rand($#sep + 1))];
-		}
-		$retval = substr($retval, 0, (length($retval) - 1));
+	if ($self->{no_separator}) {
+		$retval = join('', @parts);
 	}
 	else {
-		$_sep = substr($self->{separator}, 0, 1)
-			if length $self->{separator} >= 1;
+		if ($self->{random_separator} && length $self->{separator} > 1) {
+			my @sep = split('', $self->{separator});
 
-		$retval = join($_sep, @parts);
+			for my $w (@parts) {
+				$retval .= $w.$sep[int(rand($#sep + 1))];
+			}
+			$retval = substr($retval, 0, (length($retval) - 1));
+		}
+		else {
+			$_sep = substr($self->{separator}, 0, 1)
+				if length $self->{separator} >= 1;
+
+			$retval = join($_sep, @parts);
+		}
 	}
 
 	if (defined $self->{leet_speak} && $self->{leet_speak} > 0 && $self->check_valid_for_leet($retval)) {

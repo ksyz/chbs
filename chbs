@@ -36,6 +36,8 @@ OPTIONS:
 	is requested for each word gap.
 -R,--random-separator
 	Select random character from separator list.
+-a,--no-separator
+	Don't separate passphrase words.
 -1	[ N ]
 	Add one number at random place, replacing character with matching leet
 	speek number. To keep some password checkers quiet. Without value, 
@@ -64,6 +66,7 @@ my $options = GetOptions(
 	'L|max-length=i' => \$c{passphrase_max_length},
 	'R|random-separator!' => \$c{random_separator},
 	's|separator=s' => \$c{separator},
+	'a|no-separator!' => \$c{no_separator},
 	'B|bip0039=s' => \$c{bip0039},
 	'1:1' => \$c{leet_speak},
 	'x:1' => \$c{insert_random_special},
