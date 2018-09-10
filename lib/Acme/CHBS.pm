@@ -170,7 +170,7 @@ sub throw {
 		$retval = join($_sep, @parts);
 	}
 
-	if (defined $self->{leet_speak} && $self->{leet_speak} > 0 && $self->check_valit_for_leet($retval)) {
+	if (defined $self->{leet_speak} && $self->{leet_speak} > 0 && $self->check_valid_for_leet($retval)) {
 		my @indexes = ();
 		my $i;
 		for (my $i = length $retval; $i > 0; $i--) {
@@ -207,7 +207,7 @@ my $leet_table = {
 	9 => 'Pq',
 };
 
-sub check_valit_for_leet {
+sub check_valid_for_leet {
 	my ($self, $passphrase) = @_;
 	unless ($self->{_leet_valid_qr}) {
 		my $_leet_valid_r = join('', values %$leet_table);
