@@ -1,10 +1,10 @@
-%global commit0 693da4cfeb2a8f9a52c18a826720a49b35351663
+%global commit0 a22cfaf3bb93bd83e6b72f3f9614ddcec94220bc
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global package_name chbs
 
 Name:           perl-Acme-CHBS
-Version:        5
-Release:        2.%{shortcommit0}%{?dist}
+Version:        6
+Release:        1.%{shortcommit0}%{?dist}
 Summary:        Correct horse battery staple
 License:        WTFPL
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ done
 %doc README.md
 
 %changelog
+* Wed Jan  3 2018 Michal Ingeli <mi@v3.sk> 6-1
+- Version upgrade
+
 * Wed Jan  3 2018 Michal Ingeli <mi@v3.sk> 5-2
 - Added perl into BR, to expand perl(:MODULE_COMPAT_) macro.
 
