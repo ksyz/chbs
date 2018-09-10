@@ -16,6 +16,25 @@ use File::Slurp;
 
 use constant DIVIDE_BY => 2**32;
 
+my @numbers_table = qw(1 2 3 4 5 6 7 8 9 0);
+
+my @specials_table;
+{ no warnings; @specials_table = qw($ & ( ) < > [ ] * + - _ , . : ? @ | #); }
+
+my $leet_table = {
+	0 => 'OQDo',
+	1 => 'ILil',
+	2 => 'Zz',
+	3 => 'Ee',
+	4 => 'HAa',
+	5 => 'Ss',
+	6 => 'Ggb',
+	7 => 'TtjJ',
+	8 => 'B',
+	9 => 'Pq',
+};
+
+
 sub check_word;
 sub check_passphrase;
 sub check_if_we_can;
@@ -43,6 +62,8 @@ sub new {
 		separator => ' ',
 		random_separator => 0,
 		leet_speak => 0,
+		insert_random_number => 0,
+		insert_random_special => 0,
 		@_ 
 	};
 
@@ -73,6 +94,12 @@ sub _rand {
 	# as demonstrated by our uniform.t test.
 	return int(_to_float($rand, $self->{_n_lines}));
 };
+
+sub _rand_n {
+	my $rand = irand();
+	return int(_to_float($rand, $_[1]));
+};
+
 
 sub jar {
 	my $self = shift;
@@ -172,39 +199,48 @@ sub throw {
 
 	if (defined $self->{leet_speak} && $self->{leet_speak} > 0 && $self->check_valid_for_leet($retval)) {
 		my @indexes = ();
-		my $i;
-		for (my $i = length $retval; $i > 0; $i--) {
+		for (my $i = 0; $i < length($retval); $i++) {
 			my $char = substr($retval, $i, 1);
 			push @indexes, $i
 				if (index($self->{_leet_valid_r}, $char) != -1);
 		}
 		for (my $i = 0; $i < $self->{leet_speak} && 0 < scalar(@indexes); $i++) {
-			my $index = int(rand(scalar(@indexes)));
+			my $index = int(rand($#indexes));
 			my $replace = $indexes[$index];
-			my $new_val = substr($retval, 0, $replace);
-
-			$new_val .= $self->char_to_leet(substr($retval, $replace, 1));
-			$new_val .= substr($retval, $replace+1, length($retval) - ( $replace + 1))
-				if ($replace + 1 < length($retval));
+			my $new_char = $self->char_to_leet(_get_char($retval, $replace));
+			$retval = _replace_char($retval, $replace, $new_char);
 			splice @indexes, $index, 1;
-			$retval = $new_val;
+		}
+	}
+
+	my $j = 0;
+	# scratch card/list of character indexes/positions available for changes. so we 
+	# actually can exhaust all available characters in passphrase.
+	my @index_of_changes = ( map { $j++ } split('', $retval) );
+
+	if (defined $self->{insert_random_number} && $self->{insert_random_number} > 0) {
+		for (my $i = 0; $i < $self->{insert_random_number} && 0 < scalar(@index_of_changes); $i++) {
+			my $rand_index = $self->_rand_n($#index_of_changes);
+			$retval = _replace_char(
+				$retval, 
+				$index_of_changes[$rand_index], 
+				$numbers_table[$self->_rand_n($#numbers_table)]);
+			splice @index_of_changes, $rand_index, 1;
+		}
+	}
+
+	if (defined $self->{insert_random_special} && $self->{insert_random_special} > 0) {
+		for (my $i = 0; $i < $self->{insert_random_special} && 0 < scalar(@index_of_changes); $i++) {
+			my $rand_index = $self->_rand_n($#index_of_changes);
+			$retval = _replace_char(
+				$retval, 
+				$index_of_changes[$rand_index], 
+				$specials_table[$self->_rand_n($#specials_table)]);
+			splice @index_of_changes, $rand_index, 1;
 		}
 	}
 
 	return $retval;
-};
-
-my $leet_table = {
-	0 => 'OQDo',
-	1 => 'ILil',
-	2 => 'Zz',
-	3 => 'Ee',
-	4 => 'HAa',
-	5 => 'Ss',
-	6 => 'Ggb',
-	7 => 'TtjJ',
-	8 => 'B',
-	9 => 'Pq',
 };
 
 sub check_valid_for_leet {
@@ -239,4 +275,30 @@ sub char_to_leet {
 	return undef;
 }
 
+sub _replace_char {
+	my ($input, $index, $char) = @_;
+
+	die sprintf("Input index out of the bounds. Length: %i, Index: %i\n", length $input, $index)
+		if $index >= length($input) || 0 > $index;
+
+	die "Not a single char provided." 
+		if 1 != length $char;
+
+		# 	my $retval = substr($input, 0, $index);
+		# 	$retval .= $char;
+		#	$retval .= substr($input, $index+1, length($input) - ($index + 1))
+		# if $index + 1 < length($input);
+		# return $retval;
+	substr($input, $index, 1, $char);
+	return $input;
+}
+
+sub _get_char {
+	my ($input, $index) = @_;
+
+	die sprintf("Input index out of the bounds. Length: %i, Index: %i\n", length $input, $index)
+		if $index >= length $input || 0 > $index;
+
+	return substr($input, $index, 1);
+}
 1;

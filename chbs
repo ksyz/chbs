@@ -42,6 +42,10 @@ OPTIONS:
 	defaults to one/1.
 -B,--bip0039 LANG
 	Use BIP-0039 language specific word list.
+-x	[ N ]
+	Insert special char at random place. One of: "# $ & ( ) < > [ ] * + - _ , . : ? @ |"
+-z	[ N ]
+	Insert number char at random place. One of: 1 2 3 4 5 6 7 8 9 0
 HELP
 };
 
@@ -62,6 +66,8 @@ my $options = GetOptions(
 	's|separator=s' => \$c{separator},
 	'B|bip0039=s' => \$c{bip0039},
 	'1:1' => \$c{leet_speak},
+	'x:1' => \$c{insert_random_special},
+	'z:1' => \$c{insert_random_number},
 );
 
 exit 1
